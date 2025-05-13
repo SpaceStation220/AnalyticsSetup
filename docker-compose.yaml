@@ -27,7 +27,7 @@ services:
     container_name: grafana-agent
     volumes:
       # Mount the HOST log directory into the CONTAINER at /var/log/game_logs (read-only)
-      - /run/media/furior/Data/ss13/Bandastation/data/logs:/var/log/game_logs:ro
+      - /run/media/furior/Data/ss13/Bandastation/data/logs:/var/log/game_logs:ro # TODO: into env var and multiple sources support
       # Mount the Agent config file
       - ./agent-config.yaml:/etc/agent/agent.yaml:ro
       # Mount volume for positions file (needs write access inside container)
