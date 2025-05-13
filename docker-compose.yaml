@@ -1,0 +1,66 @@
+version: '3.8'
+
+networks:
+  logging:
+
+volumes:
+  grafana_data: {}
+  loki_data: {}
+  promtail_positions: {} # To store read positions for log files
+
+services:
+  loki:
+    image: grafana/loki:2.9.5 # Pinning version is good practice
+    container_name: loki
+    ports:
+      - "3100:3100" # Loki API port
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - logging
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:2.9.5 # Pinning version is good practice
+    container_name: promtail
+    volumes:
+      # Mount the HOST log directory into the CONTAINER at /var/log/game_logs (read-only)
+      - /run/media/furior/Data/ss13/Bandastation/data/logs:/var/log/game_logs:ro
+      # Mount the Promtail config file
+      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+      # Mount volume for positions file (needs write access inside container)
+      - promtail_positions:/var/log/promtail # Separate dir for positions
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - logging
+    depends_on:
+      - loki
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.4.2 # Pinning version is good practice
+    container_name: grafana
+    ports:
+      - "3000:3000" # Grafana Web UI port
+    volumes:
+      - grafana_data:/var/lib/grafana
+      # Mount provisioning files to auto-configure Loki datasource
+      - ./grafana/provisioning/:/etc/grafana/provisioning/:ro
+      # Mount dashboards for version control
+      - ./dashboards:/etc/grafana/dashboards:ro
+    environment:
+      # Set admin user/pass (change 'your_strong_password')
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=your_strong_password
+      # Skip update checks for local instance
+      - GF_UPDATE_CHECKING_ENABLED=false
+      # Optional: allow anonymous access if needed (use with caution)
+      # - GF_AUTH_ANONYMOUS_ENABLED=true
+      # - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    networks:
+      - logging
+    depends_on:
+      - loki
+    restart: unless-stopped

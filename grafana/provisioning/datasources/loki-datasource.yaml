@@ -1,0 +1,20 @@
+apiVersion: 1
+
+datasources:
+  - name: Loki # Name displayed in Grafana
+    type: loki
+    access: proxy # Grafana backend queries Loki
+    url: http://loki:3100 # Address of Loki service within Docker network
+    jsonData:
+      # Optional: Default search query time range
+      timeInterval: "1h"
+      # Optional: Derived fields can extract data from log lines into clickable links/fields
+      # derivedFields:
+      #   - datasourceUid: '<YOUR_LOKI_UID>' # Find this in Grafana URL after creation if needed
+      #     matcherRegex: 'round_id="?(\w+-\w+)"?' # Example regex for round ID
+      #     name: roundLink
+      #     url: '/explore?orgId=1&left=["now-1h","now","Loki",{"expr":"{round_id=\"$${__value.raw}\"}%7C%3D%60%60"}]'
+      #     urlDisplayLabel: View Round Logs
+    isDefault: true # Make this the default datasource
+    version: 1
+    editable: true # Allow editing in Grafana UI

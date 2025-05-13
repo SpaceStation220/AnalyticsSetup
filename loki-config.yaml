@@ -1,0 +1,41 @@
+auth_enabled: false # No authentication for local setup
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /loki # Directory inside the loki_data volume
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24 # Use a date before your logs start
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v12 # Or v11 if preferred
+      index:
+        prefix: index_
+        period: 24h # Create a new index table daily
+
+ruler:
+  alertmanager_url: http://localhost:9093 # Not used in this basic setup
+
+# Limits suitable for a local instance, adjust if needed
+limits_config:
+  retention_period: 180d # Keep logs for 30 days, adjust as needed
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 180d
+  max_query_length: 0h # Unlimited query length for local use
+  # Adjust these ingestion limits if you encounter issues
+  ingestion_rate_mb: 15
+  ingestion_burst_size_mb: 20
