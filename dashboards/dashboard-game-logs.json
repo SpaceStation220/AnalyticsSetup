@@ -66,9 +66,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "jaba",
-          "value": "jaba"
+          "selected": false
         },
         "datasource": {
           "type": "loki",
@@ -95,9 +93,7 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "2025-05-03",
-          "value": "2025-05-03"
+          "selected": false
         },
         "datasource": {
           "type": "loki",
