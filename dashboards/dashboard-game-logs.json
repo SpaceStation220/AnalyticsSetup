@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -51,7 +51,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_type=~\"$log_type\"}",
+          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_type=~\"$log_type\"} |= `$content_search`",
           "queryType": "range",
           "refId": "A"
         }
@@ -185,6 +185,6 @@
   "timezone": "browser",
   "title": "Logs",
   "uid": "eekrt04u4zxfka",
-  "version": 6,
+  "version": 9,
   "weekStart": ""
 }
