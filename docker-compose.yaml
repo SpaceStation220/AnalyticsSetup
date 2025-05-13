@@ -22,17 +22,19 @@ services:
       - logging
     restart: unless-stopped
 
-  promtail:
-    image: grafana/promtail:2.9.5 # Pinning version is good practice
-    container_name: promtail
+  agent:
+    image: grafana/agent:v0.40.2 # Latest stable version
+    container_name: grafana-agent
     volumes:
       # Mount the HOST log directory into the CONTAINER at /var/log/game_logs (read-only)
       - /run/media/furior/Data/ss13/Bandastation/data/logs:/var/log/game_logs:ro
-      # Mount the Promtail config file
-      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+      # Mount the Agent config file
+      - ./agent-config.yaml:/etc/agent/agent.yaml:ro
       # Mount volume for positions file (needs write access inside container)
-      - promtail_positions:/var/log/promtail # Separate dir for positions
-    command: -config.file=/etc/promtail/config.yaml
+      - promtail_positions:/var/log/agent # Reusing the same volume
+    command: -config.file=/etc/agent/agent.yaml
+    ports:
+      - "12345:12345" # Agent UI port
     networks:
       - logging
     depends_on:
@@ -48,14 +50,17 @@ services:
       - grafana_data:/var/lib/grafana
       # Mount provisioning files to auto-configure Loki datasource
       - ./grafana/provisioning/:/etc/grafana/provisioning/:ro
-      # Mount dashboards for version control
-      - ./dashboards:/etc/grafana/dashboards:ro
+      # Mount dashboards for version control (read-write)
+      - ./dashboards:/etc/grafana/dashboards
     environment:
       # Set admin user/pass (change 'your_strong_password')
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=your_strong_password
       # Skip update checks for local instance
       - GF_UPDATE_CHECKING_ENABLED=false
+      # Dashboard settings
+      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
+      - GF_DASHBOARDS_VERSIONS_TO_KEEP=20
       # Optional: allow anonymous access if needed (use with caution)
       # - GF_AUTH_ANONYMOUS_ENABLED=true
       # - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer

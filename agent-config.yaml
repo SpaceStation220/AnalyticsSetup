@@ -1,0 +1,28 @@
+server:
+  log_level: info
+
+logs:
+  positions_directory: /var/log/agent
+  configs:
+    - name: default
+      clients:
+        - url: http://loki:3100/loki/api/v1/push
+      scrape_configs:
+        - job_name: game_server_logs
+          static_configs:
+            - targets:
+                - localhost
+              labels:
+                job: bandastation_local
+                __path__: /var/log/game_logs/*/*/*/*/*.log
+          pipeline_stages:
+            - regex:
+                source: filename
+                expression: '^/var/log/game_logs/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<round_id>[^/]+)/(?P<log_type>[^/]+)\.log$'
+            - template:
+                source: full_date
+                template: '{{.year}}-{{.month}}-{{.day}}'
+            - labels:
+                full_date:
+                round_id:
+                log_type:

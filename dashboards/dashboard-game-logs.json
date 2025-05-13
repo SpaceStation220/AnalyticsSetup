@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -51,7 +51,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", $log_type=\"$log_type\"}",
+          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_type=\"$log_type\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -66,9 +66,9 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "round-12.42.50",
-          "value": "round-12.42.50"
+          "selected": true,
+          "text": "jaba",
+          "value": "jaba"
         },
         "datasource": {
           "type": "loki",
@@ -125,8 +125,8 @@
       {
         "current": {
           "selected": false,
-          "text": "admin",
-          "value": "admin"
+          "text": "game",
+          "value": "game"
         },
         "datasource": {
           "type": "loki",
@@ -134,9 +134,9 @@
         },
         "definition": "",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "Файл лога",
-        "multi": false,
+        "multi": true,
         "name": "log_type",
         "options": [],
         "query": {
@@ -148,8 +148,28 @@
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 0,
+        "sort": 1,
         "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Поиск",
+        "name": "content_search",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
       }
     ]
   },
@@ -161,6 +181,6 @@
   "timezone": "browser",
   "title": "Logs",
   "uid": "eekrt04u4zxfka",
-  "version": 10,
+  "version": 2,
   "weekStart": ""
 }
