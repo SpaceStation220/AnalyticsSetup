@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -35,10 +35,10 @@
       "id": 1,
       "options": {
         "dedupStrategy": "signature",
-        "enableLogDetails": false,
+        "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": true,
-        "showLabels": true,
+        "showLabels": false,
         "showTime": false,
         "sortOrder": "Ascending",
         "wrapLogMessage": false
@@ -51,7 +51,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_type=~\"$log_type\"} |= `$content_search`",
+          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_type=~\"$log_type\", log_subtype=~\"$log_subtype\"} |= `$content_search`",
           "queryType": "range",
           "refId": "A"
         }
@@ -154,6 +154,35 @@
       {
         "current": {
           "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Подтип лога",
+        "multi": true,
+        "name": "log_subtype",
+        "options": [],
+        "query": {
+          "label": "log_subtype",
+          "refId": "LokiVariableQueryEditor-VariableQuery",
+          "stream": "{log_type=~\"$log_type\"}",
+          "type": 1
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
           "text": "",
           "value": ""
         },
@@ -183,6 +212,6 @@
   "timezone": "browser",
   "title": "Logs",
   "uid": "eekrt04u4zxfka",
-  "version": 9,
+  "version": 1,
   "weekStart": ""
 }
