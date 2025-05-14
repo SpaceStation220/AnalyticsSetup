@@ -30,6 +30,14 @@ logs:
             - regex:
                 # Default source is the log message content. Parsing only the time and types. All the other stuff should be handled in grafana.
                 expression: '\[(?P<time>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\] (?P<log_type2>[A-Z]+):(?: (?P<log_subtype>[A-Z\-]+):)?'
+
+            - timestamp:
+                source: time # Use the field extracted by the regex above
+                format: '2006-01-02 15:04:05.000' # Go's reference time format for YYYY-MM-DD HH:MM:SS.mmm
+                                                # For nanoseconds, use .999
+                # action_on_failure: "fudge" # Optional: if parsing fails, Loki will fudge a timestamp.
+                                             # Other options: "skip" (drops the log)
+                                             # Default is to use ingestion time if parsing fails.
             - labels:
                 time:
                 log_subtype:
