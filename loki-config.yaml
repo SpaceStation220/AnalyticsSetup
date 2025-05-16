@@ -36,6 +36,7 @@ limits_config:
   reject_old_samples: true
   reject_old_samples_max_age: 180d
   max_query_length: 0h # Unlimited query length for local use
+  max_entries_limit_per_query: 50000
   # Adjust these ingestion limits if you encounter issues
   ingestion_rate_mb: 100
   ingestion_burst_size_mb: 150
