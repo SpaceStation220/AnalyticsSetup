@@ -18,10 +18,10 @@ common:
 
 schema_config:
   configs:
-    - from: 2020-10-24 # Use a date before your logs start
-      store: boltdb-shipper
+    - from: 2020-05-15
+      store: tsdb
       object_store: filesystem
-      schema: v12 # Or v11 if preferred
+      schema: v13
       index:
         prefix: index_
         period: 24h # Create a new index table daily
@@ -31,11 +31,9 @@ ruler:
 
 # Limits suitable for a local instance, adjust if needed
 limits_config:
-  retention_period: 180d # Keep logs for 30 days, adjust as needed
+  #retention_period: 180d
   enforce_metric_name: false
-  reject_old_samples: true
-  reject_old_samples_max_age: 180d
-  max_query_length: 0h # Unlimited query length for local use
+  max_query_length: 1y
   max_entries_limit_per_query: 50000
   # Adjust these ingestion limits if you encounter issues
   ingestion_rate_mb: 100

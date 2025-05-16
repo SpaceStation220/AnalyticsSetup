@@ -1,0 +1,11 @@
+services:
+  vector:
+    volumes:
+      # Replace with actual paths to builds's logs folders on the host machine. Folder names in the container are used for labels.
+      - /path/to/build/1/data/logs:/var/log/game_logs/build1:ro
+      - /path/to/build/2/data/logs:/var/log/game_logs/build2:ro
+  grafana:
+    environment:
+      # Configure the auth as you want.
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=your_strong_password

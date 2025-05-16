@@ -51,7 +51,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{full_date=\"$full_date\", round_id=\"$round_id\", log_file=~\"$log_file\", log_subtype=~\"$log_subtype\"} |= `$content_search`",
+          "expr": "{full_date=\"$full_date\", round_id=\"$round_id\", log_file=~\"$log_file\", log_subtype=~\"$log_subtype\", server=\"$server\"} |= `$content_search`",
           "queryType": "range",
           "refId": "A"
         }
@@ -75,20 +75,20 @@
         "definition": "",
         "hide": 0,
         "includeAll": false,
-        "label": "Номер раунда",
+        "label": "Сервер",
         "multi": false,
-        "name": "round_id",
+        "name": "server",
         "options": [],
         "query": {
-          "label": "round_id",
+          "label": "server",
           "refId": "LokiVariableQueryEditor-VariableQuery",
-          "stream": "{full_date=\"$full_date\"}",
+          "stream": "",
           "type": 1
         },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 2,
+        "sort": 0,
         "type": "query"
       },
       {
@@ -109,7 +109,34 @@
         "query": {
           "label": "full_date",
           "refId": "LokiVariableQueryEditor-VariableQuery",
-          "stream": "",
+          "stream": "{server=\"$server\"}",
+          "type": 1
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Номер раунда",
+        "multi": false,
+        "name": "round_id",
+        "options": [],
+        "query": {
+          "label": "round_id",
+          "refId": "LokiVariableQueryEditor-VariableQuery",
+          "stream": "{full_date=\"$full_date\", server=\"$server\"}",
           "type": 1
         },
         "refresh": 1,

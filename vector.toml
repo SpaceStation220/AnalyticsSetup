@@ -12,7 +12,7 @@ address = "0.0.0.0:8686"
 # Source: Game server logs
 [sources.game_logs]
   type = "file"
-  include = ["/var/log/game_logs/*/*/*/*/*.log"]
+  include = ["/var/log/game_logs/*/*/*/*/*/*.log"]
   read_from = "beginning"
   [sources.game_logs.multiline]
     mode = "halt_before"
@@ -26,7 +26,8 @@ type = "remap"
 inputs = ["game_logs"]
 source = '''
   # Extract metadata from file path
-  parsed_path = parse_regex!(.file, r'^/var/log/game_logs/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<round_id>[^/]+)/(?P<log_file>[^/]+)\.log$')
+  parsed_path = parse_regex!(.file, r'^/var/log/game_logs/(?P<server>\w+)/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<round_id>[^/]+)/(?P<log_file>[^/]+)\.log$')
+  .server = parsed_path.server
   .full_date = parsed_path.year + "-" + parsed_path.month + "-" + parsed_path.day
   .round_id = parsed_path.round_id
   .log_file = parsed_path.log_file
@@ -71,6 +72,7 @@ out_of_order_action = "accept"
 # encoding.except_fields = ["message"] # This is if you send the whole event.
 # If you are sending JSON, the remove in VRL is better.
 [sinks.loki.labels]
+server = "{{server}}"
 full_date = "{{full_date}}"
 round_id = "{{round_id}}"
 log_file = "{{log_file}}"
