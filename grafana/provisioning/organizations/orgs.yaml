@@ -1,0 +1,5 @@
+apiVersion: 1
+
+orgs:
+  - name: SS220
+    id: 1

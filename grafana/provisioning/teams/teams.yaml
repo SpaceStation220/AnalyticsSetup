@@ -1,0 +1,30 @@
+apiVersion: 1
+
+teams:
+  # <team_identifier>:
+  - name: 'Host'
+    org_id: 1
+    folder_permissions:
+      - folder_uid: eekrt04u4zxfka
+        permissions: Admin
+    members:
+      - login: 'admin'
+        
+  - name: 'Maitainers'
+    org_id: 1
+    folder_permissions:
+      - folder_uid: eekrt04u4zxfka
+        permissions: Edit
+    members:
+      # Add team members by their login
+      # - login: 'user1'
+      # - login: 'user2'
+      
+  - name: 'Viewers'
+    org_id: 1
+    folder_permissions:
+      - folder_uid: eekrt04u4zxfka
+        permissions: View
+    members:
+      # Add team members by their login
+      # - login: 'viewer1'

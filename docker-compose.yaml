@@ -52,6 +52,10 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=your_strong_password
       # Skip update checks for local instance
       - GF_UPDATE_CHECKING_ENABLED=false
+      # Enable teams provisioning
+      - GF_TEAMS_PROVISIONING_ENABLED=true
+      # Enable organizations provisioning
+      - GF_ORGS_PROVISIONING_ENABLED=true
       # Dashboard settings
       # - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
       # - GF_DASHBOARDS_VERSIONS_TO_KEEP=20
