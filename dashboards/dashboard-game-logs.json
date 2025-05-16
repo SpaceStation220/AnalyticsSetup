@@ -39,7 +39,7 @@
         "prettifyLogMessage": false,
         "showCommonLabels": true,
         "showLabels": false,
-        "showTime": false,
+        "showTime": true,
         "sortOrder": "Ascending",
         "wrapLogMessage": false
       },
@@ -51,7 +51,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_file=~\"$log_file\", log_subtype=~\"$log_subtype\"} |= `$content_search`",
+          "expr": "{full_date=\"$full_date\", round_id=\"$round_id\", log_file=~\"$log_file\", log_subtype=~\"$log_subtype\"} |= `$content_search`",
           "queryType": "range",
           "refId": "A"
         }
@@ -209,7 +209,7 @@
   "timepicker": {
     "hidden": false
   },
-  "timezone": "browser",
+  "timezone": "utc",
   "title": "Logs",
   "uid": "eekrt04u4zxfka",
   "version": 1,
