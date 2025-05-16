@@ -11,11 +11,14 @@ address = "0.0.0.0:8686"
 
 # Source: Game server logs
 [sources.game_logs]
-type = "file"
-include = ["/var/log/game_logs/*/*/*/*/*.log"]
-read_from = "beginning"
-# Optional: Add a_multiline_start_pattern_ if your logs have multi-line entries
-#multiline.start_pattern = r"^\[\d{4}-\d{2}-\d{2}" # Example
+  type = "file"
+  include = ["/var/log/game_logs/*/*/*/*/*.log"]
+  read_from = "beginning"
+  [sources.game_logs.multiline]
+    mode = "halt_before"
+    start_pattern = '^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}'
+    condition_pattern = '^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}'
+    timeout_ms = 1000
 
 # Extract metadata from file path
 [transforms.extract_path_metadata]
@@ -37,10 +40,11 @@ type = "remap"
 inputs = ["extract_path_metadata"]
 source = '''
   # Parse log message content
-  parsed_message = parse_regex!(.message, r'\[(?P<time_str>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\] (?:(?P<log_type>[A-Z\-]+):)?(?: (?P<log_subtype>[A-Z\-]+):)?')
+  parsed_message = parse_regex!(.message, r'(?sm)\[(?P<time_str>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\] (?:(?P<log_type>[A-Z\-]+): )?(?:(?P<log_subtype>[A-Z\-]+): )?(?P<message>.+)')
   
   .log_type = parsed_message.log_type
   .log_subtype = parsed_message.log_subtype
+	.message = parsed_message.message
   
   # Parse timestamp for proper ordering and type
   # This will replace any existing .timestamp field or create it.
