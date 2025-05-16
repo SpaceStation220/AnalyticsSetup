@@ -1,0 +1,74 @@
+# Vector configuration for SS13 logs
+# Equivalent to the previous Grafana Agent configuration
+
+# Data directory for storing positions
+data_dir = "/var/lib/vector"
+
+# API for Vector's observability
+[api]
+enabled = true
+address = "0.0.0.0:8686"
+
+# Source: Game server logs
+[sources.game_logs]
+type = "file"
+include = ["/var/log/game_logs/*/*/*/*/*.log"]
+read_from = "beginning"
+# Optional: Add a_multiline_start_pattern_ if your logs have multi-line entries
+#multiline.start_pattern = r"^\[\d{4}-\d{2}-\d{2}" # Example
+
+# Extract metadata from file path
+[transforms.extract_path_metadata]
+type = "remap"
+inputs = ["game_logs"]
+source = '''
+  # Extract metadata from file path
+  parsed_path = parse_regex!(.file, r'^/var/log/game_logs/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<round_id>[^/]+)/(?P<log_file>[^/]+)\.log$')
+  .full_date = parsed_path.year + "-" + parsed_path.month + "-" + parsed_path.day
+  .round_id = parsed_path.round_id
+  .log_file = parsed_path.log_file
+  
+  del(.file)
+'''
+
+# Parse log content
+[transforms.parse_log_content]
+type = "remap"
+inputs = ["extract_path_metadata"]
+source = '''
+  # Parse log message content
+  parsed_message = parse_regex!(.message, r'\[(?P<time_str>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\] (?:(?P<log_type>[A-Z\-]+):)?(?: (?P<log_subtype>[A-Z\-]+):)?')
+  
+  .log_type = parsed_message.log_type
+  .log_subtype = parsed_message.log_subtype
+  
+  # Parse timestamp for proper ordering and type
+  # This will replace any existing .timestamp field or create it.
+  # It's good practice to use this as the primary timestamp field.
+  .timestamp = parse_timestamp!(parsed_message.time_str, format: "%Y-%m-%d %H:%M:%S.%3f") 
+'''
+
+# Send to Loki
+[sinks.loki]
+type = "loki"
+inputs = ["parse_log_content"]
+endpoint = "http://loki:3100"
+encoding.codec = "text"
+# Use the parsed timestamp for log entries
+out_of_order_action = "accept"
+
+# Healthcheck enabled by default, which is good.
+# batch.max_bytes = 1_048_576 # Default, tune if needed
+# request.timeout_secs = 60 # Default, tune if needed
+
+# Optional: If you want to remove the original 'message' field after parsing
+# and before sending to Loki, you can do it in parse_log_content
+# or explicitly here:
+# encoding.except_fields = ["message"] # This is if you send the whole event.
+# If you are sending JSON, the remove in VRL is better.
+[sinks.loki.labels]
+full_date = "{{full_date}}"
+round_id = "{{round_id}}"
+log_file = "{{log_file}}"
+log_type = "{{log_type}}"
+log_subtype = "{{log_subtype}}"

@@ -51,7 +51,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_type=~\"$log_type\", log_subtype=~\"$log_subtype\"} |= `$content_search`",
+          "expr": "{job=\"bandastation_local\", full_date=\"$full_date\", round_id=\"$round_id\", log_file=~\"$log_file\", log_subtype=~\"$log_subtype\"} |= `$content_search`",
           "queryType": "range",
           "refId": "A"
         }
@@ -137,10 +137,10 @@
         "includeAll": true,
         "label": "Файл лога",
         "multi": true,
-        "name": "log_type",
+        "name": "log_file",
         "options": [],
         "query": {
-          "label": "log_type",
+          "label": "log_file",
           "refId": "LokiVariableQueryEditor-VariableQuery",
           "stream": "",
           "type": 1
@@ -171,7 +171,7 @@
         "query": {
           "label": "log_subtype",
           "refId": "LokiVariableQueryEditor-VariableQuery",
-          "stream": "{log_type=~\"$log_type\"}",
+          "stream": "{log_file=~\"$log_file\"}",
           "type": 1
         },
         "refresh": 1,
@@ -207,7 +207,7 @@
     "to": "now"
   },
   "timepicker": {
-    "hidden": true
+    "hidden": false
   },
   "timezone": "browser",
   "title": "Logs",
